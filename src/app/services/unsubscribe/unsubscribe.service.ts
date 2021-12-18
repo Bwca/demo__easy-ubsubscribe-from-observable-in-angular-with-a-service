@@ -6,12 +6,11 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 export class UnsubscribeService implements OnDestroy {
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
-  public untilDestroyed = <T>(source$: Observable<T>): Observable<T> => {
-    return source$.pipe(takeUntil(this.destroy$));
+  public get untilDestroyed(): <T>(source$: Observable<T>)=> Observable<T> {
+    return <T>(source$: Observable<T>) => source$.pipe(takeUntil(this.destroy$));
   };
 
   public ngOnDestroy(): void {
-    console.log('BYE BYE!');
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }
